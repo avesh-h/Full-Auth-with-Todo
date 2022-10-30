@@ -1,24 +1,33 @@
-import logo from './logo.svg';
-import './App.css';
+import { useState } from "react";
+import SignUpForm from "./components/SignUpForm";
+import LoginForm from "./components/LoginForm";
+import { Link, Routes, Route, BrowserRouter as Router } from "react-router-dom";
+import Todo from "./components/Todo";
+import Todos from "./components/Todos";
 
 function App() {
+  const [currTodos, setCurrTodos] = useState([]);
+  const addHandler = (currUserId) => {
+    const todoArr = JSON.parse(localStorage.getItem("todos"));
+    const currUserTodo = todoArr.filter((user) => user.todoId === currUserId);
+    setCurrTodos([...currUserTodo]);
+  };
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <Router>
+        <div className="App">
+          <Routes>
+            <Route path="/" element={<SignUpForm />} />
+            <Route path="/login" element={<LoginForm />} />
+            <Route
+              path="/dashboard"
+              element={<Todo onAddTodo={addHandler} />}
+            />
+          </Routes>
+        </div>
+      </Router>
+      <Todos CurrentUserTodos={currTodos} />
+    </>
   );
 }
 
